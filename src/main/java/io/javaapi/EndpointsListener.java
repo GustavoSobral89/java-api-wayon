@@ -1,0 +1,27 @@
+package io.javaapi;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+/**
+ * Lista os end points ao iniciar.
+ * 
+ * @author Gustavo
+ *
+ */
+@Component
+public class EndpointsListener {
+
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(EndpointsListener.class);
+
+    @EventListener
+    public void handleContextRefresh(ContextRefreshedEvent event) {
+        ApplicationContext applicationContext = event.getApplicationContext();
+        applicationContext.getBean(RequestMappingHandlerMapping.class)
+            .getHandlerMethods().forEach((key, value) -> LOGGER.info("{} {}", key, value));
+    }
+}
